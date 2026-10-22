@@ -8,7 +8,9 @@ public class PlayerController : MonoBehaviour
     public Collider2D collidersStand;
     public Collider2D collidersSlide;
     private  Animator animatior;
-    
+    public GameObject coin;
+    public GameManager gameManager;
+    private int getCoin = 50;
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
@@ -53,7 +55,6 @@ public class PlayerController : MonoBehaviour
             animatior.SetBool("Grounded",true);
             jumpCount = 0;
         }
-
     }
     private void OnCollisionExit2D(Collision2D collision)
     {
@@ -68,11 +69,18 @@ public class PlayerController : MonoBehaviour
         {
             Die();
         }
+        if(collision.gameObject.tag == "Coin")
+        {
+            collision.gameObject.SetActive(false);
+            gameManager.AddScore(getCoin);
+            gameManager.AddCoin();
+        }
     }
     private void Die()
     {
         animatior.SetTrigger("Die");
         rigid.linearVelocity = Vector2.zero;
         rigid.simulated = false;
+        gameManager.OnPlayerDead();
     }
 }

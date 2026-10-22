@@ -30,7 +30,7 @@ public class Platform : MonoBehaviour
         if(collision.collider.CompareTag("Player") && !stepped)
         {
             stepped = true;
-            //gameManager.AddScore(score);
+            gameManager.AddScore(score);
         }
     }
 }

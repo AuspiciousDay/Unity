@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4799388564844592248}
   m_Layer: 0
   m_Name: Coin
-  m_TagString: Untagged
+  m_TagString: Coin
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -140,10 +140,10 @@ GameObject:
   - component: {fileID: 2614860973295056256}
   - component: {fileID: 7668939196086562259}
   - component: {fileID: 4665151953161337817}
-  - component: {fileID: 8741933998569397739}
+  - component: {fileID: 4031869804799721810}
   m_Layer: 0
   m_Name: SmallPlatform
-  m_TagString: Untagged
+  m_TagString: Platform
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -157,7 +157,7 @@ Transform:
   m_GameObject: {fileID: 3393431928088066374}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 14.79, y: -0.3, z: 0}
+  m_LocalPosition: {x: 14.786, y: -0.3, z: 0}
   m_LocalScale: {x: 0.25, y: 0.3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -269,7 +269,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 8, y: 1.6}
   m_EdgeRadius: 0
---- !u!114 &8741933998569397739
+--- !u!114 &4031869804799721810
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

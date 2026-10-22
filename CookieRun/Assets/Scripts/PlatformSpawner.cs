@@ -2,82 +2,85 @@ using UnityEngine;
 
 public class PlatformSpawner : MonoBehaviour
 {
-    public GameObject TopPlatformPrefab;
-    public GameObject BottomPlatformPrefab;
-    public GameObject SmallPlatformPrefab;
-    private int initCount = 5;
+    public GameObject[] PlatformPrefabs = new GameObject[3];
+    private int initCount = 7;
     private GameObject[] TopPlatforms;
     private GameObject[] BottomPlatforms;
     private GameObject[] SmallPlatforms;
-    private int currentIndex = 0;
-    public float interval = 1f;
-    private float intervalRange = 0.25f;
-    private float currentInterval;
+    private int[] currentIndices = new int[3]; 
+    public float[] Interval = new float[3];
+    public float intervalRange = 0.25f;
+    public float[] CurrentInterval = new float[3];
+    private float[] spawnTimers = new float[3]; 
     public float yRange = 1.5f;
-    private float spawnTimer = 0f;
-    public Transform TopSpawnPoint;
-    public Transform BottomSpawnPoint;
-    public Transform SmallSpawnPoint;
+    public Transform[] SpawnPoints = new Transform[3];
     public GameManager gameManager;
-    private bool canSpawn;
-    
+
     private void Awake()
     {
-        TopPlatforms = new GameObject[initCount];
-        for(int i = 0; i < TopPlatforms.Length; i++)
-        {
-            TopPlatforms[i] = Instantiate(TopPlatformPrefab);
-            TopPlatforms[i].SetActive(false);
-        }
-        BottomPlatforms = new GameObject[initCount];
-        for(int i = 0; i < BottomPlatforms.Length; i++)
-        {
-            BottomPlatforms[i] = Instantiate(BottomPlatformPrefab);
-            BottomPlatforms[i].SetActive(false);
-        }
-        SmallPlatforms = new GameObject[initCount];
-        for(int i = 0; i < SmallPlatforms.Length; i++)
-        {
-            SmallPlatforms[i] = Instantiate(SmallPlatformPrefab);
-            SmallPlatforms[i].SetActive(false);
-        }
+        NewPlatforms(ref TopPlatforms, PlatformPrefabs[0]);
+        NewPlatforms(ref BottomPlatforms, PlatformPrefabs[1]);
+        NewPlatforms(ref SmallPlatforms, PlatformPrefabs[2]);
     }
+
     private void Start()
     {
-        currentInterval = Random.Range(-intervalRange, intervalRange);
-        spawnTimer = currentInterval;
+        for (int i = 0; i < CurrentInterval.Length; i++)
+        {
+            CurrentInterval[i] = Interval[i] + Random.Range(-intervalRange, intervalRange);
+        }
+        spawnTimers[1] = CurrentInterval[1];
     }
+
     private void Update()
     {
         if (gameManager.IsGameOver)
         {
             return;
-        }
-        spawnTimer += Time.deltaTime;
-        if(spawnTimer > currentInterval)
+        } 
+        for (int i = 0; i < spawnTimers.Length; i++)
         {
-            spawnTimer = 0f;
+            spawnTimers[i] += Time.deltaTime;
+        }
+        SpawnTime(0, TopPlatforms, SpawnPoints[0], ref CurrentInterval[0], ref Interval[0]);
+        SpawnTime(1, BottomPlatforms, SpawnPoints[1], ref CurrentInterval[1], ref Interval[1]);
+        SpawnTime(2, SmallPlatforms, SpawnPoints[2], ref CurrentInterval[2], ref Interval[2], true);
+    }
+    private void SpawnTime(int typeIndex, GameObject[] gameObjects, Transform targetTransform, ref float currentInterval, ref float interval, bool trans = false)
+    {
+        if (spawnTimers[typeIndex] > currentInterval)
+        {
+            spawnTimers[typeIndex] = 0f; 
             currentInterval = interval + Random.Range(-intervalRange, intervalRange);
-            Spawn(TopPlatforms, TopSpawnPoint);
-            Spawn(BottomPlatforms, BottomSpawnPoint);
-            canSpawn = true;
-        }
-        if(spawnTimer > currentInterval - 0.1f && canSpawn)
-        {
-            Spawn(SmallPlatforms, SmallSpawnPoint, true);
+            Spawn(typeIndex, gameObjects, targetTransform, trans);
         }
     }
-    private void Spawn(GameObject[] gameObjects, Transform transform, bool trans = false)
+
+    private void NewPlatforms(ref GameObject[] gameObjects, GameObject prefabObject)
     {
-        gameObjects[currentIndex].SetActive(false);
-        gameObjects[currentIndex].transform.position = transform.transform.position;
+        gameObjects = new GameObject[initCount];
+        for(int i = 0; i < gameObjects.Length; i++)
+        {
+            gameObjects[i] = Instantiate(prefabObject);
+            gameObjects[i].SetActive(false);
+        }
+    }
+    private void Spawn(int typeIndex, GameObject[] gameObjects, Transform targetTransform, bool trans)
+    {
+        int index = currentIndices[typeIndex];
+        gameObjects[index].SetActive(false);
+        gameObjects[index].transform.position = targetTransform.position; 
         if (trans)
         {
-            Vector3 point = transform.position;
+            Vector3 point = targetTransform.position;
             point.y += Random.Range(-yRange, yRange);
-            gameObjects[currentIndex].transform.position = point;
+            gameObjects[index].transform.position = point;
+            foreach(Transform child in gameObjects[index].transform)
+            {
+                child.gameObject.SetActive(true);
+            }
         }
-        gameObjects[currentIndex].SetActive(true);
-        currentIndex = (currentIndex + 1) % gameObjects.Length;
+        gameObjects[index].SetActive(true);
+        currentIndices[typeIndex] = (index + 1) % gameObjects.Length;
     }
 }
