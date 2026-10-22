@@ -1858,7 +1858,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'RESTART: PUSH R'
+  m_text: 'RESTART: PRESS R'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 9e637c7a25079754caccd68af543c564, type: 2}
   m_sharedMaterial: {fileID: -1151961143817221576, guid: 9e637c7a25079754caccd68af543c564, type: 2}
